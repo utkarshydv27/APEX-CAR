@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101a24">
+  <meta name="description" content="APEX Ultra Highway Racing — a browser-based 3D arcade driving prototype.">
+  <title>APEX Ultra Highway Racing</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="loading"><div class="loader"></div><h2>STARTING ENGINE</h2><p>Loading ultra highway…</p></div>
+  <div id="game">
+    <canvas id="scene"></canvas>
+    <header class="hud">
+      <div class="brand"><span class="brand-mark">R</span><div><strong>APEX</strong><small>RACING SIM</small></div></div>
+      <div class="stats">
+        <div class="stat"><small>SPEED</small><div><b id="speed">000</b><span> KM/H</span></div></div>
+        <div class="stat"><small>DISTANCE</small><div><b id="distance">0.00</b><span> KM</span></div></div>
+        <div class="stat"><small>BEST</small><div><b id="best">000</b><span> KM/H</span></div></div>
+      </div>
+      <button id="pause" class="icon-button" aria-label="Pause game">Ⅱ</button>
+    </header>
+    <div class="mission"><span class="live-dot"></span><span id="status">ROAD OPEN</span><span class="mission-sep">/</span><span>ULTRA HIGHWAY RUN</span></div>
+    <div id="start-screen" class="overlay">
+      <div class="panel">
+        <div class="eyebrow">NEXT-GEN BROWSER RACING</div>
+        <h1>OWN THE<br><em>ROAD.</em></h1>
+        <p>Drive fast. Read the road. Avoid traffic.</p>
+        <button id="start" class="primary">START ENGINE <span>↗</span></button>
+        <div class="control-hint">WASD / ARROW KEYS <span>•</span> TOUCH CONTROLS ON MOBILE</div>
+      </div>
+    </div>
+    <div id="game-over" class="overlay hidden">
+      <div class="panel result">
+        <div class="eyebrow">RACE INTERRUPTED</div><h1>WRECKED<span>.</span></h1>
+        <p>You hit traffic. Reset and take another run.</p>
+        <div class="result-stats"><div><small>DISTANCE</small><b id="final-distance">0.00 KM</b></div><div><small>TOP SPEED</small><b id="final-speed">0 KM/H</b></div></div>
+        <button id="restart" class="primary">DRIVE AGAIN <span>↻</span></button>
+      </div>
+    </div>
+    <div id="paused" class="pause-overlay hidden"><div><b>PAUSED</b><p>Press P or tap resume</p><button id="resume" class="primary">RESUME</button></div></div>
+    <div class="bottom-left"><span class="key">W</span><span class="key">A</span><span class="key">S</span><span class="key">D</span><small>DRIVE</small></div>
+    <div class="touch-controls">
+      <button id="left" aria-label="Steer left">‹</button>
+      <button id="right" aria-label="Steer right">›</button>
+      <button id="brake" aria-label="Brake">BRAKE</button>
+      <button id="gas" aria-label="Accelerate">GAS <span>▲</span></button>
+    </div>
+    <div class="bottom-right"><span class="sound-dot"></span> 3D DRIVE <span class="sep">|</span> <span id="gear">GEAR 1</span></div>
+  </div>
+  <script>
+    (function () {
+      const showLoadError = function (title, detail) {
+        const loading = document.querySelector('#loading');
+        if (!loading || loading.style.display === 'none') return;
+        const heading = loading.querySelector('h2');
+        const message = loading.querySelector('p');
+        if (heading) heading.textContent = title;
+        if (message) message.textContent = detail;
+      };
+      window.addEventListener('error', function (event) {
+        if (window.__apexGameReady) return;
+        console.error('APEX game initialization error:', event.message || event);
+        showLoadError('LOADING ISSUE', 'The game engine failed to start. Check F12 > Console.');
+      });
+      window.addEventListener('unhandledrejection', function (event) {
+        if (window.__apexGameReady) return;
+        console.error('APEX startup promise rejected:', event.reason || event);
+        showLoadError('LOADING ISSUE', 'A 3D resource failed. Check internet, then refresh.');
+      });
+      window.addEventListener('apex-game-ready', function () {
+        window.__apexGameReady = true;
+        const loading = document.querySelector('#loading');
+        if (loading) loading.style.display = 'none';
+      });
+      setTimeout(function () {
+        if (!window.__apexGameReady) {
+          showLoadError('ENGINE DID NOT START', 'Check internet, then press F12 and read Console errors.');
+        }
+      }, 12000);
+    })();
+  </script>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.165.0/examples/jsm/"
+      }
+    }
+  </script>
+  <script type="module" src="game.js"></script>
+</body>
+</html>
