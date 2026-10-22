@@ -2,6 +2,17 @@
 
 A browser-based 3D arcade highway racing prototype built with HTML, CSS, JavaScript, and Three.js.
 
+## Play online with GitHub Pages
+
+The repository contains a GitHub Actions deployment workflow at `.github/workflows/deploy.yml`.
+
+**One-time setup required:** open this repository's **Settings → Pages**, then under **Build and deployment → Source**, choose **GitHub Actions**. The workflow will then deploy the static site when code is pushed to `main`.
+
+After the workflow succeeds, the game should be available at:
+https://utkarshydv27.github.io/APEX-CAR/
+
+You can check deployment progress under the repository's **Actions** tab.
+
 ## Features
 
 - Multi-lane divided highway with lane markings, median, shoulders, rumble strips, and guardrails.
